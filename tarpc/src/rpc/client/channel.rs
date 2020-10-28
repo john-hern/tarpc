@@ -28,7 +28,7 @@ use std::{
         Arc,
     },
 };
-
+use std::time::Duration;
 use super::{Config, NewClient};
 
 /// Handles communication from the client to request dispatch.

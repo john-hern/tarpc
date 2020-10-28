@@ -6,9 +6,18 @@
 
 use std::{
     collections::HashMap,
-    hash::{BuildHasher, Hash},
-    time::{Duration, SystemTime},
+    hash::{BuildHasher, Hash}
 };
+
+
+use std::time::Duration;
+
+#[cfg (not(feature ="wasm"))]
+use std::time::{SystemTime};
+
+#[cfg(feature ="wasm")]
+use wasm_timer::{SystemTime};
+
 
 #[cfg(feature = "serde")]
 #[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
@@ -25,6 +34,25 @@ impl TimeUntil for SystemTime {
         self.duration_since(SystemTime::now()).unwrap_or_default()
     }
 }
+
+pub trait SystemTimeExt { 
+    fn into_system_time(self) -> std::time::SystemTime;
+}
+
+impl SystemTimeExt for SystemTime { 
+    #[cfg(feature ="wasm")]
+    fn into_system_time(self) -> std::time::SystemTime { 
+        let tmp = self.duration_since(wasm_timer::UNIX_EPOCH).unwrap();
+        let sys_time = std::time::UNIX_EPOCH + std::time::Duration::from_secs(tmp.as_secs());
+        return sys_time;
+    }
+
+    #[cfg (not(feature ="wasm"))]
+    fn into_system_time(self) -> std::time::SystemTime { 
+        self
+    }
+}
+
 
 /// Collection compaction; configurable `shrink_to_fit`.
 pub trait Compact {

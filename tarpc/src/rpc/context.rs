@@ -9,7 +9,17 @@
 
 use crate::trace::{self, TraceId};
 use static_assertions::assert_impl_all;
-use std::time::{Duration, SystemTime};
+
+use std::time::Duration;
+
+#[cfg (not(feature ="wasm"))]
+use std::time::{SystemTime};
+
+#[cfg(feature ="wasm")]
+use wasm_timer::{SystemTime};
+
+use crate::rpc::util::SystemTimeExt;
+
 
 /// A request context that carries request-scoped information like deadlines and trace information.
 /// It is sent from client to server and is used by the server to enforce response deadlines.

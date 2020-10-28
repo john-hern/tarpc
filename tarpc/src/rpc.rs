@@ -34,7 +34,13 @@ pub use crate::{client::Client, server::Server, trace, transport::sealed::Transp
 
 use anyhow::Context as _;
 use futures::task::*;
-use std::{fmt::Display, io, time::SystemTime};
+use std::{fmt::Display, io };
+
+#[cfg (not(feature ="wasm"))]
+use std::time::{SystemTime};
+
+#[cfg(feature ="wasm")]
+use wasm_timer::{SystemTime};
 
 /// A message from a client to a server.
 #[derive(Debug)]
