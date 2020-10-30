@@ -31,6 +31,24 @@ use std::{
 use std::time::Duration;
 use super::{Config, NewClient};
 
+//use crate::rpc::util::InstantExt;
+
+#[cfg (not(feature ="wasm"))]
+use std::time::{SystemTime };
+
+#[cfg (not(feature ="wasm"))]
+use tokio::time::Instant;
+
+#[cfg(feature ="wasm")]
+use wasm_timer::{SystemTime, Instant};
+
+
+#[cfg (not(feature ="wasm"))]
+use tokio::time::{Timeout, timeout};
+
+#[cfg(feature ="wasm")]
+use wasm_timer::tokio_timeout::{Timeout, timeout};
+
 /// Handles communication from the client to request dispatch.
 #[derive(Debug)]
 pub struct Channel<Req, Resp> {
@@ -78,7 +96,7 @@ impl<'a, Req, Resp> Future for Send<'a, Req, Resp> {
 #[must_use = "futures do nothing unless polled"]
 pub struct Call<'a, Req, Resp> {
     #[pin]
-    fut: tokio::time::Timeout<AndThenIdent<Send<'a, Req, Resp>, DispatchResponse<Resp>>>,
+    fut: Timeout<AndThenIdent<Send<'a, Req, Resp>, DispatchResponse<Resp>>>,
 }
 
 impl<'a, Req, Resp> Future for Call<'a, Req, Resp> {
@@ -88,7 +106,9 @@ impl<'a, Req, Resp> Future for Call<'a, Req, Resp> {
         let resp = ready!(self.as_mut().project().fut.poll(cx));
         Poll::Ready(match resp {
             Ok(resp) => resp,
-            Err(tokio::time::Elapsed { .. }) => Err(io::Error::new(
+
+            //TODO: Investigate this error type. For now swallow as a generic error
+            Err(_) => Err(io::Error::new( //tokio::time::Elapsed { .. }
                 io::ErrorKind::TimedOut,
                 "Client dropped expired request.".to_string(),
             )),
@@ -129,19 +149,16 @@ impl<Req, Resp> Channel<Req, Resp> {
     /// Sends a request to the dispatch task to forward to the server, returning a [`Future`] that
     /// resolves to the response.
     pub fn call(&mut self, ctx: context::Context, request: Req) -> Call<Req, Resp> {
-        let timeout = ctx.deadline.time_until();
+        let timeout_delay = ctx.deadline.time_until();
         trace!(
             "[{}] Queuing request with timeout {:?}.",
             ctx.trace_id(),
-            timeout,
+            timeout_delay,
         );
-
-        Call {
-            fut: tokio::time::timeout(timeout, AndThenIdent::new(self.send(ctx, request))),
-        }
+        let fut = timeout(timeout_delay, AndThenIdent::new(self.send(ctx, request)));
+        Call { fut }
     }
 }
-
 /// A server response that is completed by request dispatch when the corresponding response
 /// arrives off the wire.
 #[pin_project(PinnedDrop)]
