@@ -44,10 +44,10 @@ use wasm_timer::{SystemTime, Instant};
 
 
 #[cfg (not(feature ="wasm"))]
-use tokio::time::{Timeout, timeout};
+use tokio::time::{Timeout, timeout, Elapsed};
 
 #[cfg(feature ="wasm")]
-use wasm_timer::tokio_timeout::{Timeout, timeout};
+use wasm_timer::tokio_timeout::{Timeout, timeout, Elapsed};
 
 /// Handles communication from the client to request dispatch.
 #[derive(Debug)]
@@ -107,8 +107,7 @@ impl<'a, Req, Resp> Future for Call<'a, Req, Resp> {
         Poll::Ready(match resp {
             Ok(resp) => resp,
 
-            //TODO: Investigate this error type. For now swallow as a generic error
-            Err(_) => Err(io::Error::new( //tokio::time::Elapsed { .. }
+            Err(Elapsed { .. }) => Err(io::Error::new( 
                 io::ErrorKind::TimedOut,
                 "Client dropped expired request.".to_string(),
             )),
