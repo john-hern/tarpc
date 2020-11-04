@@ -39,8 +39,8 @@ static_assertions = "1.1.0"
 tarpc-plugins = { path = "../plugins", version = "0.8" }
 tokio-util = { optional = true, version = "0.3" }
 tokio-serde = { optional = true, version = "0.6" }
-# wasm-timer = {optional = true, git = "https://github.com/john-hern/wasm-timer", branch = "tokioShim" }
-wasm-timer = {optional = true, path="../../wasm-timer" }
+wasm-timer = {optional = true, git = "https://github.com/john-hern/wasm-timer", branch = "tokioShim" }
+# wasm-timer = {optional = true, path="../../wasm-timer" }
 
 [dev-dependencies]
 assert_matches = "1.0"
