@@ -19,8 +19,8 @@ serde1 = ["tarpc-plugins/serde1", "serde", "serde/derive"]
 tokio1 = []
 serde-transport = ["tokio-serde", "tokio-util/codec"]
 tcp = ["tokio/net", "tokio/stream"]
-
 full = ["serde1", "tokio1", "serde-transport", "tcp"]
+wasm = ["rand/wasm-bindgen", "serde-transport", "wasm-timer"]
 
 [badges]
 travis-ci = { repository = "google/tarpc" }
@@ -39,6 +39,8 @@ tarpc-plugins = { path = "../plugins", version = "0.8" }
 tokio = { version = "0.3" }
 tokio-util = { optional = true, version = "0.4" }
 tokio-serde = { optional = true, version = "0.6" }
+wasm-timer = {optional = true, path="../../wasm-timer" }
+# wasm-timer = {optional = true, version = "*" }
 
 [dev-dependencies]
 assert_matches = "1.4"

@@ -16,7 +16,11 @@ use pin_project::pin_project;
 use std::collections::VecDeque;
 use std::io;
 use std::pin::Pin;
-use std::time::SystemTime;
+#[cfg (not(feature ="wasm"))]
+use std::time::{SystemTime};
+
+#[cfg(feature ="wasm")]
+use wasm_timer::{SystemTime};
 
 #[pin_project]
 pub(crate) struct FakeChannel<In, Out> {
