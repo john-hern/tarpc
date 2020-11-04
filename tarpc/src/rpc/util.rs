@@ -14,14 +14,9 @@ use std::time::Duration;
 
 #[cfg (not(feature ="wasm"))]
 use std::time::{SystemTime};
-use tokio::time::Instant as TokioInstant;
 
 #[cfg(feature ="wasm")]
 use wasm_timer::{SystemTime, Instant, UNIX_EPOCH};
-
-
-#[cfg (not(feature ="wasm"))]
-use tokio::time::Instant;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
@@ -56,33 +51,6 @@ impl SystemTimeExt for SystemTime {
         self
     }
 }
-/*
-pub trait InstantExt { 
-    fn into_tokio_instant(self) -> tokio::time::Instant;
-}
-
-impl InstantExt for Instant { 
-    #[cfg(feature ="wasm")]
-    fn into_tokio_instant(self) -> tokio::time::Instant { 
-        let system_now = SystemTime::now();
-        let instant_now = Instant::now();
-        let duration = Duration::from_secs(0);
-        let secs = system_now.duration_since(UNIX_EPOCH).unwrap();
-       
-
-        let std_instant = unsafe { 
-            let z = std::sys::wasm::time::Instant::zero().checked_add_duration(&secs).unwrap();
-            std::time::Instant(z)
-        };
-        tokio::time::Instant::from_std(std_instant)
-    }
-
-    #[cfg (not(feature ="wasm"))]
-    fn into_tokio_instant(self) -> tokio::time::Instant { 
-        self
-    }
-}
-*/
 
 /// Collection compaction; configurable `shrink_to_fit`.
 pub trait Compact {
