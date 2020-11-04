@@ -40,7 +40,7 @@ use wasm_timer::{SystemTime, Instant};
 use tokio::time::{Timeout, timeout, Elapsed};
 
 #[cfg(feature ="wasm")]
-use wasm_timer::tokio_timeout::{Timeout, timeout, Elapsed};
+use wasm_timer::{Timeout, timeout, Elapsed};
 
 /// Handles communication from the client to request dispatch.
 #[derive(Debug)]
