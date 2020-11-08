@@ -14,7 +14,6 @@ use std::time::Duration;
 
 use crate::time::SystemTime;
 
-
 /// A request context that carries request-scoped information like deadlines and trace information.
 /// It is sent from client to server and is used by the server to enforce response deadlines.
 ///

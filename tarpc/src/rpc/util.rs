@@ -6,12 +6,11 @@
 
 use std::{
     collections::HashMap,
-    hash::{BuildHasher, Hash}
+    hash::{BuildHasher, Hash},
 };
 
-
-use std::time::Duration;
 use crate::time::SystemTime;
+use std::time::Duration;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(docsrs, doc(cfg(feature = "serde")))]

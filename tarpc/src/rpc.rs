@@ -34,7 +34,7 @@ pub use crate::{client::Client, server::Server, trace, transport::sealed::Transp
 
 use anyhow::Context as _;
 use futures::task::*;
-use std::{fmt::Display, io };
+use std::{fmt::Display, io};
 
 use crate::time::SystemTime;
 

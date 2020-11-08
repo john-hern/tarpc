@@ -4,6 +4,7 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+use super::{Config, NewClient};
 use crate::{
     context,
     trace::SpanId,
@@ -28,11 +29,10 @@ use std::{
         Arc,
     },
 };
-use super::{Config, NewClient};
 
 //use crate::rpc::util::InstantExt;
 
-use crate::time::{Timeout, timeout, Elapsed };
+use crate::time::{timeout, Elapsed, Timeout};
 
 /// Handles communication from the client to request dispatch.
 #[derive(Debug)]
@@ -92,7 +92,7 @@ impl<'a, Req, Resp> Future for Call<'a, Req, Resp> {
         Poll::Ready(match resp {
             Ok(resp) => resp,
 
-            Err(Elapsed { .. }) => Err(io::Error::new( 
+            Err(Elapsed { .. }) => Err(io::Error::new(
                 io::ErrorKind::TimedOut,
                 "Client dropped expired request.".to_string(),
             )),

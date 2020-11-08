@@ -289,5 +289,5 @@ pub use tarpc_plugins::service;
 /// `async`, meaning that this should not break existing code.
 pub use tarpc_plugins::server;
 
-/// Non-public module for time shims to support WASMs. 
+/// Non-public module for time shims to support WASMs.
 mod time;

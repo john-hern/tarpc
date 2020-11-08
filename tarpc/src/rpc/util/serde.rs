@@ -5,9 +5,7 @@
 // https://opensource.org/licenses/MIT.
 
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use std::{
-    io
-};
+use std::io;
 
 use std::time::Duration;
 
