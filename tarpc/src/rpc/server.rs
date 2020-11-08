@@ -25,13 +25,7 @@ use pin_project::pin_project;
 use std::{fmt, hash::Hash, io, marker::PhantomData, pin::Pin};
 use tokio::time::Timeout;
 
-#[cfg (not(feature ="wasm"))]
-use std::time::{SystemTime};
-
-#[cfg(feature ="wasm")]
-use wasm_timer::{SystemTime};
-
-use crate::rpc::util::SystemTimeExt;
+use crate::time::SystemTime;
 
 mod filter;
 #[cfg(test)]
@@ -493,7 +487,7 @@ where
         trace!(
             "[{}] Received request with deadline {} (timeout {:?}).",
             request.context.trace_id(),
-            format_rfc3339(deadline.into_system_time()),
+            format_rfc3339(deadline.into()),
             timeout,
         );
         let ctx = request.context;
@@ -577,7 +571,7 @@ where
                                 debug!(
                                     "[{}] Response did not complete before deadline of {}s.",
                                     self.ctx.trace_id(),
-                                    format_rfc3339(self.deadline.into_system_time())
+                                    format_rfc3339(self.deadline.into())
                                 );
                                 // No point in responding, since the client will have dropped the
                                 // request.
@@ -585,7 +579,7 @@ where
                                     kind: io::ErrorKind::TimedOut,
                                     detail: Some(format!(
                                         "Response did not complete before deadline of {}s.",
-                                        format_rfc3339(self.deadline.into_system_time())
+                                        format_rfc3339(self.deadline.into())
                                     )),
                                 })
                             }

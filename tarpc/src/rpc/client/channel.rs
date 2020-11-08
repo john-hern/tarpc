@@ -32,11 +32,7 @@ use super::{Config, NewClient};
 
 //use crate::rpc::util::InstantExt;
 
-#[cfg(feature ="wasm")]
-use wasm_timer::{SystemTime, Instant, Timeout, timeout, Elapsed};
-
-#[cfg(not(feature ="wasm"))]
-use tokio::time::{Timeout, timeout, Elapsed};
+use crate::time::{Timeout, timeout, Elapsed };
 
 /// Handles communication from the client to request dispatch.
 #[derive(Debug)]

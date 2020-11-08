@@ -11,11 +11,7 @@ use std::{
 
 use std::time::Duration;
 
-#[cfg (not(feature ="wasm"))]
-use std::time::{SystemTime};
-
-#[cfg(feature ="wasm")]
-use wasm_timer::{SystemTime};
+use crate::time::SystemTime;
 
 /// Serializes `system_time` as a `u64` equal to the number of seconds since the epoch.
 pub fn serialize_epoch_secs<S>(system_time: &SystemTime, serializer: S) -> Result<S::Ok, S::Error>

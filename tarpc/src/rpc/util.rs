@@ -11,12 +11,7 @@ use std::{
 
 
 use std::time::Duration;
-
-#[cfg (not(feature ="wasm"))]
-use std::time::{SystemTime};
-
-#[cfg(feature ="wasm")]
-use wasm_timer::{SystemTime, Instant, UNIX_EPOCH};
+use crate::time::SystemTime;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
@@ -31,24 +26,6 @@ pub trait TimeUntil {
 impl TimeUntil for SystemTime {
     fn time_until(&self) -> Duration {
         self.duration_since(SystemTime::now()).unwrap_or_default()
-    }
-}
-
-pub trait SystemTimeExt { 
-    fn into_system_time(self) -> std::time::SystemTime;
-}
-
-impl SystemTimeExt for SystemTime { 
-    #[cfg(feature ="wasm")]
-    fn into_system_time(self) -> std::time::SystemTime { 
-        let tmp = self.duration_since(wasm_timer::UNIX_EPOCH).unwrap();
-        let sys_time = std::time::UNIX_EPOCH + std::time::Duration::from_secs(tmp.as_secs());
-        return sys_time;
-    }
-
-    #[cfg (not(feature ="wasm"))]
-    fn into_system_time(self) -> std::time::SystemTime { 
-        self
     }
 }
 

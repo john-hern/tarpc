@@ -12,11 +12,7 @@ use static_assertions::assert_impl_all;
 
 use std::time::Duration;
 
-#[cfg (not(feature ="wasm"))]
-use std::time::{SystemTime};
-
-#[cfg(feature ="wasm")]
-use wasm_timer::{SystemTime};
+use crate::time::SystemTime;
 
 
 /// A request context that carries request-scoped information like deadlines and trace information.

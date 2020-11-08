@@ -36,11 +36,7 @@ use anyhow::Context as _;
 use futures::task::*;
 use std::{fmt::Display, io };
 
-#[cfg (not(feature ="wasm"))]
-use std::time::{SystemTime};
-
-#[cfg(feature ="wasm")]
-use wasm_timer::{SystemTime};
+use crate::time::SystemTime;
 
 /// A message from a client to a server.
 #[derive(Debug)]
