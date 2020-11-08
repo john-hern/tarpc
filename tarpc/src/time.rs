@@ -6,4 +6,4 @@ pub use std::time::{SystemTime, Instant};
 pub use tokio::time::{Timeout, timeout, Elapsed};
 
 #[cfg(feature ="wasm")]
-pub use wasm_timer::{SystemTime, Timeout, Instant, timeout, Elapsed };
+pub use wasm_timer::{SystemTime, Timeout, Instant, timeout::{timeout, Elapsed } };
